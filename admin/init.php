@@ -1,4 +1,5 @@
 <?php
+
 $config = [
     'template-name' => 'main',
     'menu' => [
@@ -27,14 +28,15 @@ $password = 'admin';
 $dbname = 'photogallery';
 	
 try {
-    $connection = new PDO("pgsql:host={$host};port={$port};user={$user};password={$password};dbname={$dbname}");
+    $db = new PDO("pgsql:host={$host};port={$port};user={$user};password={$password};dbname={$dbname}");
 
-    $connection->setAttribute(
+    $db->setAttribute(
         PDO::ATTR_ERRMODE, 
         PDO::ERRMODE_EXCEPTION
     );
 } catch (PDOException $e) {
-    exit("Error: " . $e->getMessage());
+    echo "Error: " . $e->getMessage();
+    die();
 }
 
 

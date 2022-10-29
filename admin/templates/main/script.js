@@ -26,3 +26,20 @@ async function postData(url = '', data = {}, headers = {'Content-Type': 'applica
     }
     return await response.json();
 }
+
+window.addEventListener('DOMContentLoaded', function(){
+    let authForm = document.querySelector('.auth-form');
+
+    // authForm.addEventListener('submit', function(e){
+    //     e.preventDefault();
+
+    //     let data = new FormData(authForm);
+    //     let postData = {};
+
+    //     data.forEach(function(value, key){
+    //         postData[key] = value;
+    //     });
+    //     postData = JSON.stringify(postData);
+    //     console.log(postData);
+    // })
+})
