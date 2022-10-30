@@ -24,9 +24,18 @@ if($_POST['AUTH']['login-btn']){
             'firstname' => $res->user_firstname,
             'lastname' => $res->user_lastname,
             'login' => $res->user_login,
-            'photo' => $res->user_photo,
-            'bgimage' => $res->user_bgimage,
+            'photo' => $res->user_photo ?: null,
+            'bgimage' => $res->user_bgimage ?: null,
+            'post_count' => 0,
+            'rating' => 0
         ];
+
+        $query = $db->prepare('SELECT photo_id FROM photo WHERE user_id = ?');
+        $query->execute([$_SESSION['user_id']]);
+
+        while($row = $query->fetch(PDO::FETCH_LAZY)) {
+            $_SESSION['user']['post_count'] += 1;
+        }
     }
 }
 ?>

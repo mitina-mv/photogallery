@@ -1,12 +1,8 @@
 <?php
-// проверка авторизации
-session_start();
-// if(!isset($_SESSION['user_id'])){
-//     header('Location: /auth/');
-//     exit;
-// }
-
-include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/menu/' . $config['menu']['top'] . '.php');
+foreach($config['menu'] as $menu){
+    include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/menu/' . $menu . '.php');
+}
+if(isset($_SESSION['user_id'])){
 ?>
 
 
@@ -24,14 +20,24 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/menu/' . $config['menu']['top']
 <header>
     <div class="avatar">
         <div class="avatar__nums">
+            <div class="avatar-nums__item">
+                <span class='avatar-nums__num'><?=$_SESSION['user']['post_count']?></span>
+                <span>посты</span>
+            </div>
+            <div class="avatar-nums__item">
+                <span class='avatar-nums__num'><?=$_SESSION['user']['rating']?></span>
+                <span>оценка</span>
+            </div>
 
         </div>
 
-        <img class="avatar__photo" src="" alt="аватар">
+        <img class="avatar__photo" src="<?=$_SESSION['user']['photo']?>" alt="аватар">
         
         <div class="avatar__name">
-
+            <span class="avatar__main-name"><?=$_SESSION['user']['lastname'] . $_SESSION['user']['firstname']?></span>
+            <span class="avatar__subname"><?=$_SESSION['user']['login']?></span>
         </div>
+        
 
     </div>
 
@@ -43,4 +49,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/menu/' . $config['menu']['top']
                 </a>
         <?php endforeach;?>
     </nav>
+
+    <a href="?logout=true">Выход</a>
 </header>
+
+<?php }?>

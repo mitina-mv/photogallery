@@ -28,7 +28,7 @@ async function postData(url = '', data = {}, headers = {'Content-Type': 'applica
 }
 
 window.addEventListener('DOMContentLoaded', function(){
-    let authForm = document.querySelector('.auth-form');
+    // let authForm = document.querySelector('.auth-form');
 
     // authForm.addEventListener('submit', function(e){
     //     e.preventDefault();
