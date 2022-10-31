@@ -5,7 +5,11 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 ?>
 
 <h2 class="main-caption">
-    
+    Ваши фото
 </h2>
+
+<div class="posts">
+    
+</div>
 
 

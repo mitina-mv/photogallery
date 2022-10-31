@@ -5,7 +5,12 @@ function route($data) {
 
     // GET /photo
     if ($data['method'] === 'GET' && count($data['urlData']) === 1) {
-        echo json_encode(getPhotos());
+        echo json_encode(getPhotos($_SESSION['user_id']));
+        exit;
+    }
+    // GET /photo/5
+    if ($data['method'] === 'GET' && count($data['urlData']) === 2) {
+        echo json_encode(getPhotos($data['urlData'][1]));
         exit;
     }
 
@@ -63,8 +68,15 @@ function getPhotos($user_id) {
         'records' => []
     ];
 
-    while($row = $pdo->fetch(PDO::FETCH_LAZY)) {
-        $result['records'][] = $row;
+    while($row = $data->fetch(PDO::FETCH_LAZY)) {
+        if(!$row->photo_id) continue;
+        
+        $result['records'][] = [
+            'path' => $row->photo_path,
+            'desc' => $row->photo_description,
+            'id' => $row->photo_id,
+            'date' => $row->photo_date
+        ];
     }
 
     return $result;

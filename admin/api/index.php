@@ -8,6 +8,7 @@ header('Access-Control-Allow-Credentials: true');
 // Подключаем библиотеки и хелперы
 // include_once 'lib/underscore.php';
 include_once 'helpers/query.php';
+include_once 'helpers/files.php';
 session_start();
 
 // Получаем данные из запроса

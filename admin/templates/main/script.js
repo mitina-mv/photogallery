@@ -27,6 +27,23 @@ async function postData(url = '', data = {}, headers = {'Content-Type': 'applica
     return await response.json();
 }
 
+const getElement = (tagName, classNames, attrs, content) => {
+	const element = document.createElement(tagName);
+
+	if(classNames)
+		element.classList.add(...classNames);
+
+	if(attrs){
+		for(let attr in attrs){
+			element[attr] = attrs[attr];
+		}
+	}
+	if(content)
+		element.innerHTML = content;
+
+	return element;
+}
+
 window.addEventListener('DOMContentLoaded', function(){
     // let authForm = document.querySelector('.auth-form');
 
@@ -42,4 +59,14 @@ window.addEventListener('DOMContentLoaded', function(){
     //     postData = JSON.stringify(postData);
     //     console.log(postData);
     // })
+
+    let postContainer = document.querySelector('.posts');
+    if(postContainer){
+        getData('/admin/api/photo')
+            .then((data) => {
+                data['records'].foreach(() => {
+                    
+                })
+            })
+    }
 })

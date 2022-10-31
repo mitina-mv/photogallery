@@ -35,7 +35,6 @@ function getFormData($method) {
 
 // Получаем все данные о запросе
 function getRequestData() {
-    // Определяем метод запроса
     $method = $_SERVER['REQUEST_METHOD'];
 
     // Разбираем url
@@ -43,14 +42,11 @@ function getRequestData() {
     $url = trim($url, '/');
     $urls = explode('/', $url);
 
-    // Убираем из api-запросов префикс admin/api/
-    $urlData = array_slice($urls, 2);
-
     return array(
         'method' => $method,
         'formData' => getFormData($method),
-        'urlData' => $urlData,
-        'router' => $urlData[0]
+        'urlData' => $urls,
+        'router' => $urls[0]
     );
 
 }
@@ -64,22 +60,23 @@ function connectDB() {
     $password = 'admin';
     $dbname = 'photogallery';
 
-    $dsn = "pgsql:host={$host};port={$port};user={$user};password={$password};dbname={$dbname};charset=utf8";
-    $options = array(
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_LAZY
+
+    $db = new PDO("pgsql:host={$host};port={$port};user={$user};password={$password};dbname={$dbname}");
+
+    $db->setAttribute(
+        PDO::ATTR_ERRMODE, 
+        PDO::ERRMODE_EXCEPTION
     );
 
-    return new PDO($dsn, $options);
+    return $db;
 }
 
 
 // Проверка роутера на валидность
 function isValidRouter($router) {
     return in_array($router, array(
-        'tests',
-        'brands',
-        'products'
+        'photo',
+        'user',
     ));
 }
 
