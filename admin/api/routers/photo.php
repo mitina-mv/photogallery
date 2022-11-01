@@ -15,10 +15,8 @@ function route($data) {
     }
 
     // POST /photo
-    if ($data['method'] === 'POST' && count($data['urlData']) === 1 && isset($data['formData']['title'])) {
-        $title = $data['formData']['title'];
-
-        echo json_encode(addPhoto($title));
+    if ($data['method'] === 'POST') {
+        echo json_encode(addPhoto($data['formData']));
         exit;
     }
 
@@ -70,8 +68,10 @@ function getPhotos($user_id) {
 
     while($row = $data->fetch(PDO::FETCH_LAZY)) {
         if(!$row->photo_id) continue;
+
+        $photoids[] = $row->photo_id;
         
-        $result['records'][] = [
+        $result['records'][$row->photo_id] = [
             'path' => $row->photo_path,
             'desc' => $row->photo_description,
             'id' => $row->photo_id,
@@ -79,12 +79,45 @@ function getPhotos($user_id) {
         ];
     }
 
+    try {
+        $in = str_repeat('?,', count($photoids) - 1) . '?';
+        $query = "SELECT * FROM rating WHERE photo_id IN ($in)";
+        $data = $pdo->prepare($query);
+        $data->execute($photoids);
+    } catch (PDOException $e) {
+        \Helpers\query\throwHttpError('query error', $e->getMessage());
+        exit;
+    }
+
+    while($row = $data->fetch(PDO::FETCH_LAZY)) {
+        if(!$rating[$row->photo_id]){
+            $rating[$row->photo_id] = [
+                'value' => 0,
+                'count' => 0
+            ];
+        }
+
+        $rating[$row->photo_id]['value'] += $row->rating_value;
+        ++$rating[$row->photo_id]['count'];
+    }
+
+
+    foreach($result['records'] as $key => $item){
+        if($rating[$key]['count'] > 0)
+            $r = round($rating[$key]['value'] / $rating[$key]['count'], 1);
+        else 
+            $r = 0;
+
+        $result['records'][$key]['rating'] = $r;
+    }
+
+
     return $result;
 }
 
 
 // Добавление фото для текущего юзера
-function addPhoto($data) {
+function addPhoto($fdata) {
     try{
         $pdo = \Helpers\query\connectDB();
     } catch (PDOException $e) {
@@ -93,14 +126,16 @@ function addPhoto($data) {
     }
 
     try {
-        $file = \Helpers\files\loadfile('post-photo')[0];
-        $query = 'INSERT INTO photo (brand) VALUES (:title)';
+        $file = \Helpers\files\loadfile('add-post-file')[0];
+
+        $query = 'INSERT INTO photo (photo_description, photo_path, user_id) 
+                    VALUES (:description, :path, :user_id)';
+                    
         $data = $pdo->prepare($query);
-        $data->bindParam(':title', $title);
         $data->execute([
-            'photo_description' => $data['desc'],
-            'photo_path' => $file,
-            'photo_date' => date('YYYY-mm-dd')
+            'description' => $fdata['desc'],
+            'path' => $file,
+            'user_id' => $_SESSION['user_id']
         ]);
     } catch (PDOException $e) {
         \Helpers\query\throwHttpError('query error', $e->getMessage());
@@ -115,7 +150,7 @@ function addPhoto($data) {
 
     return array(
         'id' => $newId,
-        'title' => $title
+        'desc' => $fdata['desc']
     );
 }
 

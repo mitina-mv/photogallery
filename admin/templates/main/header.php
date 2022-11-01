@@ -13,6 +13,7 @@ if(isset($_SESSION['user_id'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заголовок страницы</title>
+    <link rel="stylesheet" href="/admin/templates/main/style.css">
     <script src="/admin/templates/main/script.js"></script>
 </head>
 <body>

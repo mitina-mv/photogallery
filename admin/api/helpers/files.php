@@ -14,9 +14,9 @@ function loadfile($field){
     );
     
     // Директория куда будут загружаться файлы.
-    $path = __DIR__ . '/upload/userfiles/';
+    $path = $_SERVER['DOCUMENT_ROOT'] . "/upload/userfiles/";
     
-    if (isset($_FILES[$input_name])) {
+    if (isset($_FILES[$field])) {
         // Проверим директорию для загрузки.
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
@@ -24,11 +24,11 @@ function loadfile($field){
     
         // Преобразуем массив $_FILES в удобный вид для перебора в foreach.
         $files = array();
-        $diff = count($_FILES[$input_name]) - count($_FILES[$input_name], COUNT_RECURSIVE);
+        $diff = count($_FILES[$field]) - count($_FILES[$field], COUNT_RECURSIVE);
         if ($diff == 0) {
-            $files = array($_FILES[$input_name]);
+            $files = array($_FILES[$field]);
         } else {
-            foreach($_FILES[$input_name] as $k => $l) {
+            foreach($_FILES[$field] as $k => $l) {
                 foreach($l as $i => $v) {
                     $files[$i][$k] = $v;
                 }
@@ -69,19 +69,14 @@ function loadfile($field){
                 } elseif (!empty($deny) && in_array(strtolower($parts['extension']), $deny)) {
                     $error = 'Недопустимый тип файла';
                 } else {
-                    // Чтобы не затереть файл с таким же названием, добавим префикс.
                     $i = 0;
-                    $prefix = '';
-                    while (is_file($path . $parts['filename'] . $prefix . '.' . $parts['extension'])) {
-                        $prefix = '(' . ++$i . ')';
-                    }
+                    $prefix = "__" . date("Y_m_d_H_i_s");
+
                     $name = $parts['filename'] . $prefix . '.' . $parts['extension'];
 
-                    $topath[] = $path . $name;
+                    $topath[] = str_replace($_SERVER['DOCUMENT_ROOT'], '', $path . $name);
     
-                    // Перемещаем файл в директорию.
                     if (move_uploaded_file($file['tmp_name'], $path . $name)) {
-                        // Далее можно сохранить название файла в БД и т.п.
                         $success = 'Файл «' . $name . '» успешно загружен.';
                     } else {
                         $error = 'Не удалось загрузить файл.';

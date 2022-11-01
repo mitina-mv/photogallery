@@ -8,8 +8,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
     Ваши фото
 </h2>
 
-<div class="posts">
-    
-</div>
+<div class="posts"></div>
 
 

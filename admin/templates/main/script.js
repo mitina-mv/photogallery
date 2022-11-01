@@ -19,7 +19,7 @@ async function postData(url = '', data = {}, headers = {'Content-Type': 'applica
         headers: headers,
         redirect: 'follow',
         referrerPolicy: 'no-referrer',
-        body: JSON.stringify(data)
+        body: data
     });
     if (!response.ok) {
         throw new Error(`Ошибка по адресу ${url} статус ${response.status}`)
@@ -64,9 +64,27 @@ window.addEventListener('DOMContentLoaded', function(){
     if(postContainer){
         getData('/admin/api/photo')
             .then((data) => {
-                data['records'].foreach(() => {
-                    
-                })
+                for(let id in data.records){
+                    let element = data.records[id];
+                    let rating = 5;
+
+                    let htmlel = getElement('a', ['post-item'], {
+                        innerHTML: `
+                        <div class='post-item__container'>
+                            <div class='post-item__rating'>${element.rating}</div>
+                            <div class='post-item__photo' style='background-image:url(${element.path})'
+                        </div>`,
+                        href: element.path,
+                        'data-post-info': JSON.stringify(element)
+                    })
+
+                    postContainer.append(htmlel);
+                }
+            })
+        
+        postData('/admin/api/photo', '{"photo": "dfdf"}')
+            .then((data) => {
+                console.log(data);
             })
     }
 })
