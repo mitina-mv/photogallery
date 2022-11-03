@@ -10,7 +10,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         postData('/admin/api/photo', fData, {})
             .then((data) => {
-                // console.log(JSON.parse(data));
+                showUserMessage('Успех', `Пост добавлен, новый id ${data.id}`, 'success');
+                form.reset();
             })
     })
 })

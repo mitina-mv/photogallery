@@ -15,6 +15,10 @@ if(isset($_SESSION['user_id'])){
     <title>Заголовок страницы</title>
     <link rel="stylesheet" href="/admin/templates/main/style.css">
     <script src="/admin/templates/main/script.js"></script>
+
+    <script src="/admin/assets/hystmodal/hystmodal.min.js"></script>
+    <link rel="stylesheet" href="/admin/assets/hystmodal/hystmodal.min.css">
+
 </head>
 <body>
 

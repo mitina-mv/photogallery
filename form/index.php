@@ -7,10 +7,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
     Добавьте пост
 </h2>
 
-<?php
-    // print_r($_POST);
-?>
-
 <form action="" method="POST" enctype="multipart/form-data" class='add-post' name='add-post'>
     <label for="add-post-file">Фото</label>
     <input type="file" name="add-post-file" id="add-post-file" required accept="image/*">

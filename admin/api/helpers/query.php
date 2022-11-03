@@ -77,70 +77,16 @@ function isValidRouter($router) {
     return in_array($router, array(
         'photo',
         'user',
+        'detailpost',
     ));
 }
 
 
-// Проверка, существует ли категория с таким id
-function isExistsCategoryById($pdo, $id) {
-    $query = 'select id from categories where id=:id';
+// Проверка, существует ли пост с таким id
+function isExistsPostById($pdo, $id) {
+    $query = 'select photo_id from photo where photo_id=:photo_id';
     $data = $pdo->prepare($query);
-    $data->bindParam(':id', $id, PDO::PARAM_INT);
-    $data->execute();
-
-    return count($data->fetchAll()) === 1;
-}
-
-
-// Проверка, существует ли категория с таким названием
-function isExistsCategoryByTitle($pdo, $title) {
-    $query = 'select id from categories where category=:title';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':title', $title);
-    $data->execute();
-
-    return count($data->fetchAll()) === 1;
-}
-
-
-// Проверка, существует ли бренд с таким id
-function isExistsBrandById($pdo, $id) {
-    $query = 'select id from brands where id=:id';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':id', $id, PDO::PARAM_INT);
-    $data->execute();
-
-    return count($data->fetchAll()) === 1;
-}
-
-
-// Проверка, существует ли бренд с таким названием
-function isExistsBrandByTitle($pdo, $title) {
-    $query = 'select id from brands where brand=:title';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':title', $title);
-    $data->execute();
-
-    return count($data->fetchAll()) === 1;
-}
-
-
-// Проверка, существует ли товар с таким id
-function isExistsProductById($pdo, $id) {
-    $query = 'select id from goods where id=:id';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':id', $id, PDO::PARAM_INT);
-    $data->execute();
-
-    return count($data->fetchAll()) === 1;
-}
-
-
-// Проверка, существует ли товар с таким названием
-function isExistsProductByTitle($pdo, $title) {
-    $query = 'select id from goods where good=:title';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':title', $title);
+    $data->bindParam(':photo_id', $id, PDO::PARAM_INT);
     $data->execute();
 
     return count($data->fetchAll()) === 1;

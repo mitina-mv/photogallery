@@ -34,3 +34,40 @@
     display: grid;
     gap: 12px;
 }
+
+
+.message {
+    position: fixed;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 16px;
+    bottom: 16px;
+    right: 16px;
+}
+
+.message-close {
+    position: absolute;
+    top: -9px;
+    right: -7px;
+    background: #ccc;
+    padding: 3px 8px;
+    border-radius: 50%;
+    color: #fff;
+}
+
+
+.post-modal__photo {
+    height: 75vh;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.post-modal__body {
+    display: grid;
+    grid-template-columns: 80% auto;
+}
+
+.hystmodal__window {
+    width: 85vw !important;
+}
