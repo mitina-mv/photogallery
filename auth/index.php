@@ -2,9 +2,10 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/init.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template-name'] . '/header.php');
 
+
 if($_POST['AUTH']['login-btn']){
     $login = htmlspecialchars($_POST['AUTH']['login']);
-    $password = md5(md5($_POST['AUTH']['password'] . "-pwd"));
+    $password = md5(md5($_POST['AUTH']['password']). "-pwd");
     
     $query = $db->prepare('SELECT * FROM "user" WHERE user_password = :password AND user_login = :login');
 
@@ -36,6 +37,8 @@ if($_POST['AUTH']['login-btn']){
         while($row = $query->fetch(PDO::FETCH_LAZY)) {
             $_SESSION['user']['post_count'] += 1;
         }
+
+        setcookie('user-token', md5($_SESSION['user_id']), time()+60*60*24*30, '/');
     }
 }
 ?>

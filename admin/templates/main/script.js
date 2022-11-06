@@ -51,6 +51,20 @@ const getElement = (tagName, classNames, attrs, dataAttrs, content) => {
 	return element;
 }
 
+const getCookie = (cname) => {
+  let name = cname + "=";
+  let ca = document.cookie.split(';');
+  for(let i = 0; i < ca.length; i++)
+  {
+    let c = ca[i].trim();
+
+    if (c.indexOf(name) == 0) 
+        return c.substring(name.length,c.length);
+  }
+
+  return null;
+}
+
 const showUserMessage = (title, info, status) => {
     let mes = getElement('div', ['message', 'message_' + status], {
         innerHTML: `<div class="message-head">${title}</div>
@@ -63,10 +77,27 @@ const showUserMessage = (title, info, status) => {
     // setTimeout(() => mes.remove(), 3000);
 }
 
+const generateStar = (count) => {
+    let curRating = "";
+
+    for(let i = 5; i > 0; --i){
+        curRating += `<span data-rating="${i}" class="post-star ${i <= Math.floor(count) ? 'ph-star' : 'ph-star-empty'}"></span>`
+    }
+
+    return curRating;
+}
+
+let postStarBlock = null;
+
+const addPostRating = function(event, element, postID) {    
+    console.log(event.target);
+    console.log(element);
+    console.log(postID);
+}
+
 const showPostModal = function(modal) {
     let modalStart = modal.starter;
     let modalBody = modal.openedWindow.querySelector('.post-modal__body');
-    let loader = modalBody.innerHTML;
     let photoId = modalStart.getAttribute('data-post-id');
 
     getData('/admin/api/detailpost/' + photoId)
@@ -74,20 +105,12 @@ const showPostModal = function(modal) {
                 let post = data.post,
                     user = data.user;
 
+                let classPostrating = getCookie('user-token') == post.user ? "post-rating__change-rating_blocked" : "";                
+
                 let userPhoto = user.photo ? `<img class='user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-photo_no-pict'>${user.firstname[0]}</div>`;
 
-                let curRating = "";
-
-                for(let i = 0; i < 5; ++i){
-                    if(i + 1 < post.rating){
-                        curRating += 'x';
-                    } else {
-                        curRating += 't';
-                    }
-                }
-                    
                 modalBody.innerHTML = `
-                    <div class="post-modal__photo" style='background-image:url(${post.path})'></div>
+                    <div class="post-modal__photo" style='background-image:url(${post.path})' data-id='${post.id}'></div>
 
                     <div class="post-modal__info">
                         <div class="post-modal__author">
@@ -106,19 +129,30 @@ const showPostModal = function(modal) {
                         <div class='post-modal__rating post-rating'>
                             <div class='post-rating__current-rating'>${post.rating}</div>
 
-                            <div class='post-rating__change-rating'>
-                                ${curRating}
+                            <div class='post-rating__change-rating ${classPostrating}'>
+                                ${generateStar(post.rating)}
                             </div>
                         </div>
                     </div>
                 `;
+
+                postStarBlock = modalBody.querySelector('.post-rating__change-rating:not(.post-rating__change-rating_blocked)');
+
+                if(postStarBlock && getCookie('user-token') == post.user) {
+                    postStarBlock.addEventListener('click', function(e) {
+                        addPostRating(e, this, post.id);
+                    })
+                }
             })
 }
 
 window.addEventListener('DOMContentLoaded', function(){
     const postModal = new HystModal({
         linkAttributeName: "data-hystmodal",
-        beforeOpen: showPostModal
+        beforeOpen: showPostModal,
+        afterClose: function(modal){
+            modal.openedWindow.querySelector('.post-modal__body').innerHTML = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
+        },
     });
 
     let postContainer = document.querySelector('.posts');
@@ -145,8 +179,6 @@ window.addEventListener('DOMContentLoaded', function(){
 
                     postContainer.append(htmlel);
                 }
-            })
-
-            
+            })   
     }
 })

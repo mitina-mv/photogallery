@@ -18,6 +18,7 @@ if(isset($_SESSION['user_id'])){
 
     <script src="/admin/assets/hystmodal/hystmodal.min.js"></script>
     <link rel="stylesheet" href="/admin/assets/hystmodal/hystmodal.min.css">
+    <link rel="stylesheet" href="/admin/assets/icon/style.css">
 
 </head>
 <body>

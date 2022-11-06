@@ -1,6 +1,7 @@
 <?php
 // проверка авторизации
 session_start();
+
 if(!isset($_SESSION['user_id']) && $_SERVER['REQUEST_URI'] != '/auth/'){
     header('Location: /auth/');
     exit();

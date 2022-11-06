@@ -46,12 +46,14 @@ function getPost($postID){
         ]
     ];
 
+   $userID = $row->user_id;
+
     $result['post'] = [
         'path' => $row->photo_path,
         'desc' => $row->photo_description,
         'id' => $row->photo_id,
         'date' => $row->photo_date,
-        'author' => $row->user_id,
+        'user' => md5($row->user_id)
     ];
 
     // запрос текущей оценки фото
@@ -75,13 +77,13 @@ function getPost($postID){
         $result['post']['rating'] = 0;
         
     // запрос данные о авторе
-    if($_SESSION['user_id'] == $result['post']['author']){
+    if($_SESSION['user_id'] == $userID){
         $result['user'] = $_SESSION['user'];
     } else {
         try {
             $query = 'SELECT * FROM user WHERE user_id=?';
             $data = $pdo->prepare($query);
-            $data->execute([$result['post']['author']]);
+            $data->execute([$userID]);
             
             $row = $data->fetch(PDO::FETCH_LAZY);
         } catch (PDOException $e) {
