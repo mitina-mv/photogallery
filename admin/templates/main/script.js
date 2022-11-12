@@ -111,10 +111,27 @@ const generateStar = (count) => {
     return curRating;
 }
 
-const addPostRating = function(event, element, postID) {    
-    console.log(event.target);
-    console.log(element);
-    console.log(postID);
+const addPostRating = function(event, element, postID, curRating) {
+    let postRating = event.target.getAttribute('data-rating');
+    let fData = new FormData;
+    let numberRating = element.closest('.post-modal__rating').querySelector('.post-rating__current-rating');
+
+    fData.append('rating', postRating);
+    fData.append('id', postID);
+
+    postData('/admin/api/rating', fData, {})
+        .then((data) => {
+            element.innerHTML = generateStar(postRating);
+            element.classList.add('post-rating__change-rating_blocked');
+
+            numberRating.innerHTML = Math.floor((curRating.value + Number(postRating)) / (curRating.count + 1));
+        })
+        .catch((error) => {
+            let cookie = decodeURIComponent(getCookie('query_error'));
+            let errorMessage = cookie ? JSON.parse(cookie).message : 'Не удалось выставить оценку, попробуйте позднее.';
+
+            showUserMessage('Ошибка', errorMessage, 'error');
+        })
 }
 
 const showPostModal = function(modal) {
@@ -126,8 +143,8 @@ const showPostModal = function(modal) {
             .then((data) => {
                 let post = data.post,
                     user = data.user;
-
-                let classPostrating = getCookie('user-token') == post.user ? "post-rating__change-rating_blocked" : "";                
+                    
+                let classPostrating = getCookie('user-token') == post.user || data.rating.userValue ? "post-rating__change-rating_blocked" : "";                
 
                 let userPhoto = user.photo ? `<img class='user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-photo_no-pict'>${user.lastname[0]}</div>`;
 
@@ -158,11 +175,11 @@ const showPostModal = function(modal) {
                     </div>
                 `;
 
-                postStarBlock = modalBody.querySelector('.post-rating__change-rating:not(.post-rating__change-rating_blocked)');
+                let postStarBlock = modalBody.querySelector('.post-rating__change-rating:not(.post-rating__change-rating_blocked)');
 
-                if(getCookie('user-token') == post.user) {
+                if(postStarBlock && getCookie('user-token') != post.user) {
                     postStarBlock.addEventListener('click', function(e) {
-                        addPostRating(e, this, post.id);
+                        addPostRating(e, this, post.id, data.rating);
                     })
                 }
             })

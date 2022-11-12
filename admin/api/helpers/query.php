@@ -78,13 +78,14 @@ function isValidRouter($router) {
         'photo',
         'user',
         'detailpost',
+        'rating',
     ));
 }
 
 
 // Проверка, существует ли пост с таким id
 function isExistsPostById($pdo, $id) {
-    $query = 'select photo_id from photo where photo_id=:photo_id';
+    $query = 'SELECT photo_id FROM photo WHERE photo_id=:photo_id';
     $data = $pdo->prepare($query);
     $data->bindParam(':photo_id', $id, PDO::PARAM_INT);
     $data->execute();
@@ -92,9 +93,18 @@ function isExistsPostById($pdo, $id) {
     return count($data->fetchAll()) === 1;
 }
 
-// Проверка, существует ли пост с таким id
+// Проверка, существует ли оценкка для поста
+function isExistsRatingByPostAndUser($pdo, $postID, $userID) {
+    $query = 'SELECT rating_id FROM rating WHERE photo_id=? AND user_id=?';
+    $data = $pdo->prepare($query);
+    $data->execute([$postID, $userID]);
+
+    return count($data->fetchAll()) === 1;
+}
+
+// Проверка, существует ли пользователь с таким логином
 function isExistsUserByLogin($pdo, $login) {
-    $query = 'select user_login from "user" where user_login=:login';
+    $query = 'SELECT user_login FROM "user" WHERE user_login=:login';
     $data = $pdo->prepare($query);
     $data->bindParam(':login', $login);
     $data->execute();
@@ -104,10 +114,12 @@ function isExistsUserByLogin($pdo, $login) {
 
 
 // Выводим 400 ошибку http-запроса
-function throwHttpError($code, $message) {
-    header('HTTP/1.0 400 Bad Request');
-    echo json_encode(array(
+function throwHttpError($code, $message, $header = '400 Bad Request') {
+    header($_SERVER["SERVER_PROTOCOL"] . " " . $header);
+    // TODO - старт сессии ограничивает отправку ответа, запрос не завершается
+    // Удрать setcookie
+    setcookie('query_error', json_encode([
         'code' => $code,
         'message' => $message
-    ));
+    ]), 0, "/");
 }

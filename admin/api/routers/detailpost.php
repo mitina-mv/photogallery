@@ -58,7 +58,7 @@ function getPost($postID){
 
     // запрос текущей оценки фото
     try {
-        $query = 'SELECT rating_value FROM rating WHERE photo_id=?';
+        $query = 'SELECT rating_value, user_id FROM rating WHERE photo_id=?';
         $data = $pdo->prepare($query);
         $data->execute([$postID]);
     } catch (PDOException $e) {
@@ -69,12 +69,17 @@ function getPost($postID){
     while($row = $data->fetch(PDO::FETCH_LAZY)) {
         $result['rating']['value'] += $row->rating_value;
         ++$result['rating']['count'];
+
+        if($row->user_id == $_SESSION['user_id']) {
+            $result['rating']['userValue'] = $row->rating_value;
+        }
     }
 
-    if($result['rating']['count'] > 0)
+    if($result['rating']['count'] > 0) {
         $result['post']['rating'] = round($result['rating']['value'] / $result['rating']['count'], 1);
-    else 
+    } else {
         $result['post']['rating'] = 0;
+    }
         
     // запрос данные о авторе
     if($_SESSION['user_id'] == $userID){
