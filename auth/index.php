@@ -4,15 +4,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 
 
 if($_POST['AUTH']['login-btn']){
-    $login = htmlspecialchars($_POST['AUTH']['login']);
-    $password = md5(md5($_POST['AUTH']['password']). "-pwd");
     
-    $query = $db->prepare('SELECT * FROM "user" WHERE user_password = :password AND user_login = :login');
-
-    $query->execute([
-        'password' => $password,
-        'login' => $login,
-    ]);
 
     $res = $query->fetch(PDO::FETCH_LAZY);
 
@@ -44,28 +36,37 @@ if($_POST['AUTH']['login-btn']){
 ?>
 
 <?if(!$_SESSION['user_id']):?>
-    <form method="post"
-        action=""
-        name="auth-form"
-        class='auth-form'>
+    <form method="post" action="" name="auth-form" class='auth-form'>
+        <div class="error-block"></div>
+        
         <div class="form-element">
             <label>Login</label>
             <input type="text"
-                name="AUTH[login]"
+                name="login"
                 pattern="[a-zA-Z0-9]+"
                 required
-                value='<?=$_REQUEST['AUTH']['login']?>' />
+                value='<?=$_REQUEST['login']?>' />
         </div>
         <div class="form-element">
             <label>Пароль</label>
             <input type="password"
-                name="AUTH[password]"
+                name="password"
                 required />
         </div>
         <button type="submit"
-            name="AUTH[login-btn]"
-            value="login">Log In</button>
+            name="login-btn"
+            value="login">Войти</button>
+
+        <div class="form-links">
+            <span class="form-links__item">
+                Впервые здесь? 
+                <a href="/auth/reg.php" class="auth-form__link form-link">Регистрация</a>
+            </span>
+        </div>
     </form>
+
 <?else:?>
     <p>Привет, <?=$_SESSION['user']['firstname']?>! Вы уже авторизованы.</p>
 <?endif;?>
+
+<script src="/admin/assets/js/auth.js"></script>

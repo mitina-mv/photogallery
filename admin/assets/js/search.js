@@ -15,6 +15,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
         getData('/admin/api/user?v=' + searchText)
             .then((data) => {
+                if(data.length == 0) {
+                    block.innerHTML = `<div class='error'>Поиск не дал результатов. Попробуте другой запрос.</div>`;
+                    return;
+                }
+
                 for(let user of data){
                     let userPhoto = user.photo ? `<img class='user-item__photo user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-item__photo_no-pict user-photo_no-pict user-photo'  style='background: ${getRandomColor()};'>${user.lastname[0]}</div>`;
 
@@ -32,6 +37,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
                     block.append(el);
                 }
+            })
+            .catch(error => {
+                block.innerHTML = `<div class='error'>Не удалось произвести поиск. Проблема в работе.</div>`;
             })
     })
 })

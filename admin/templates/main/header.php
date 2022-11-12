@@ -2,7 +2,6 @@
 foreach($config['menu'] as $menu){
     include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/menu/' . $menu . '.php');
 }
-if(isset($_SESSION['user_id'])){
 ?>
 
 
@@ -22,7 +21,7 @@ if(isset($_SESSION['user_id'])){
 
 </head>
 <body>
-
+<?php if(isset($_SESSION['user_id'])){?>
 <header>
     <div class="avatar">
         <div class="avatar__nums">

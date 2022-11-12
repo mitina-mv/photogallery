@@ -83,7 +83,7 @@
 }
 
 .post-rating__change-rating:not(.post-rating__change-rating_blocked) .post-star:hover,
-.post-rating__change-rating:not(.post-rating__change-rating_blocked) .ph-star-empty:hover~.ph-star-empty {
+.post-rating__change-rating:not(.post-rating__change-rating_blocked) .post-star:hover~.post-star {
     font-weight: 900;
     color: red;
 }
@@ -187,7 +187,7 @@
 /* поиск людев */
 .search-result {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: calc(1em + 30px) 1em;
     margin-top: calc(1em + 30px);
 }

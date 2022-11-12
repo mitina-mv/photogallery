@@ -124,7 +124,7 @@ const addPostRating = function(event, element, postID, curRating) {
             element.innerHTML = generateStar(postRating);
             element.classList.add('post-rating__change-rating_blocked');
 
-            numberRating.innerHTML = Math.floor((curRating.value + Number(postRating)) / (curRating.count + 1));
+            numberRating.innerHTML = `${((curRating.value + Number(postRating)) / (curRating.count + 1)).toFixed(1)} (оценили ${curRating.count + 1})`;
         })
         .catch((error) => {
             let cookie = decodeURIComponent(getCookie('query_error'));
@@ -142,9 +142,10 @@ const showPostModal = function(modal) {
     getData('/admin/api/detailpost/' + photoId)
             .then((data) => {
                 let post = data.post,
-                    user = data.user;
+                    user = data.user, 
+                    userRating = data.rating.userValue ? data.rating.userValue : 0;
                     
-                let classPostrating = getCookie('user-token') == post.user || data.rating.userValue ? "post-rating__change-rating_blocked" : "";                
+                let classPostrating = getCookie('user-token') == post.user || userRating ? "post-rating__change-rating_blocked" : "";                
 
                 let userPhoto = user.photo ? `<img class='user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-photo_no-pict'>${user.lastname[0]}</div>`;
 
@@ -166,10 +167,10 @@ const showPostModal = function(modal) {
                         <div class="post-modal__description">${post.desc}</div>
 
                         <div class='post-modal__rating post-rating'>
-                            <div class='post-rating__current-rating'>${post.rating}</div>
+                            <div class='post-rating__current-rating'>${post.rating} (оценили: ${data.rating.count})</div>
 
                             <div class='post-rating__change-rating ${classPostrating}'>
-                                ${generateStar(post.rating)}
+                                ${generateStar(userRating)}
                             </div>
                         </div>
                     </div>
@@ -183,4 +184,11 @@ const showPostModal = function(modal) {
                     })
                 }
             })
+}
+
+const getCookieError = () => {
+    let cookie = decodeURIComponent(getCookie('query_error'));
+    let errorMessage = cookie ? JSON.parse(cookie).message : false;
+
+    return errorMessage;
 }

@@ -2,10 +2,10 @@
 // проверка авторизации
 session_start();
 
-if(!isset($_SESSION['user_id']) && $_SERVER['REQUEST_URI'] != '/auth/'){
+if(!isset($_SESSION['user_id']) && strpos($_SERVER['REQUEST_URI'], '/auth/') === false) {
     header('Location: /auth/');
     exit();
-} else if(isset($_SESSION['user_id']) && $_SERVER['REQUEST_URI'] == '/auth/') {
+} else if(isset($_SESSION['user_id']) && strpos($_SERVER['REQUEST_URI'], '/auth/') !== false) {
     header('Location: /');
 }
 
@@ -15,21 +15,7 @@ $config = [
     'template-name' => 'main',
     'menu' => [
         'top' => 'main'
-    ],
-    // 'social-link' => [
-    //     [
-    //         'link' => 'vk.com',
-    //         'icon' => '/upload/social/vk.png'
-    //     ],
-    //     [
-    //         'link' => 'telegram.com',
-    //         'icon' => '/upload/social/telegram.png'
-    //     ],
-    //     [
-    //         'link' => 'github.com',
-    //         'icon' => '/upload/social/github.png'
-    //     ],
-    // ]
+    ]
 ];
 
 $host = '127.0.0.1';
@@ -49,10 +35,3 @@ try {
     echo "Error: " . $e->getMessage();
     die();
 }
-
-
-// $prepared = $connection->prepare('SELECT * FROM public.user WHERE user_id=5 OR user_id=12');
-// $result = $prepared->execute();
-// if (!$result) {
-//     exit();
-// }

@@ -96,7 +96,7 @@ function getPhotos($user_login) {
     }
 
     if(count($result['records']) == 0){
-        \Helpers\query\throwHttpError('query error', 'пользователь не загрузил фото');
+        \Helpers\query\throwHttpError('photo not found', 'пользователь не загрузил фото', '404 photo not found');
         exit;
     }
 

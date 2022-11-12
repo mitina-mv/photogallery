@@ -1,6 +1,6 @@
 'use strict'
 
-window.addEventListener('DOMContentLoaded', function(){
+window.addEventListener('DOMContentLoaded', function() {
     const postModal = new HystModal({
         linkAttributeName: "data-hystmodal",
         beforeOpen: showPostModal,
@@ -11,8 +11,7 @@ window.addEventListener('DOMContentLoaded', function(){
 
     let postContainer = document.querySelector('.posts');
 
-    if(postContainer)
-    {
+    if(postContainer) {
         getData('/admin/api/photo')
             .then((data) => {
                 for(let id in data.records){
@@ -22,6 +21,10 @@ window.addEventListener('DOMContentLoaded', function(){
 
                     postContainer.append(htmlel);
                 }
-            })   
+            })
+            .catch(error => {
+                let errorMess = getCookieError();
+                postContainer.innerHTML = errorMess ? errorMess : 'Ошибка получения фото.';
+            })
     }
 })

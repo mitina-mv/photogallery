@@ -13,5 +13,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 showUserMessage('Успех', `Пост добавлен, новый id ${data.id}`, 'success');
                 form.reset();
             })
+            .catch(() => {
+                showUserMessage('Ошибка', `Что-то пошло не так`, 'error');
+            })
     })
 })
