@@ -10,9 +10,14 @@ AddCharset UTF-8 .html
 Header set X-Content-Type-Options nosniff
 
 RewriteEngine On
+RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} ^/admin/api/
 RewriteRule ^admin/api/(.*) /admin/api/index.php?q=$1 [L,QSA]
+
+RewriteCond %{REQUEST_URI} ^/profile/
+RewriteRule ^profile/([^/]*)/([^/]*)/?$ /profile/index.php?login=$1 [NC,L]
 
 RewriteCond %{REQUEST_URI} !^/admin/api/
 RewriteRule ^(.*)\/$ %{REQUEST_URI}/index.php [L]

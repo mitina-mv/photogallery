@@ -92,6 +92,16 @@ function isExistsPostById($pdo, $id) {
     return count($data->fetchAll()) === 1;
 }
 
+// Проверка, существует ли пост с таким id
+function isExistsUserByLogin($pdo, $login) {
+    $query = 'select user_login from "user" where user_login=:login';
+    $data = $pdo->prepare($query);
+    $data->bindParam(':login', $login);
+    $data->execute();
+
+    return count($data->fetchAll()) === 1;
+}
+
 
 // Выводим 400 ошибку http-запроса
 function throwHttpError($code, $message) {

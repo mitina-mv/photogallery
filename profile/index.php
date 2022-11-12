@@ -3,12 +3,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/admin/init.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template-name'] . '/header.php');
 
 ?>
+<h2 class="main-caption"></h2>
 
-<h2 class="main-caption">
-    Ваши фото
-</h2>
-
+<div class="profile"></div>
 <div class="posts"></div>
+
 <div class="hystmodal post-modal" id="post-detail" aria-hidden="true">
     <div class="hystmodal__wrap">
         <div class="hystmodal__window" role="dialog" aria-modal="true">
@@ -19,5 +18,4 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
     </div>
 </div>
 
-
-<script src="/admin/assets/js/user.js"></script>
+<script src="/admin/assets/js/profile.js"></script>

@@ -81,7 +81,7 @@ function getPost($postID){
         $result['user'] = $_SESSION['user'];
     } else {
         try {
-            $query = 'SELECT * FROM user WHERE user_id=?';
+            $query = 'SELECT * FROM "user" WHERE user_id=?';
             $data = $pdo->prepare($query);
             $data->execute([$userID]);
             
@@ -97,7 +97,7 @@ function getPost($postID){
             'login' => $row->user_login,
             'photo' => $row->user_photo ?: null,
         ];
-    }
+    } 
 
     return $result;
 }

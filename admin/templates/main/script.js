@@ -1,7 +1,6 @@
 'use strict'
 
-async function getData(url = '') 
-{
+async function getData(url = '') {
     const response = await fetch(url);
     if (!response.ok) {
         throw new Error(`Ошибка по адресу ${url} статус ${response.status}`)
@@ -9,8 +8,9 @@ async function getData(url = '')
     return await response.json();
 }
 
-async function postData(url = '', data = {}, headers = {'Content-Type': 'application/json'}) 
-{
+async function postData(url = '', data = {}, headers = {
+    'Content-Type': 'application/json'
+}) {
     const response = await fetch(url, {
         method: 'POST',
         mode: 'cors',
@@ -28,41 +28,40 @@ async function postData(url = '', data = {}, headers = {'Content-Type': 'applica
 }
 
 const getElement = (tagName, classNames, attrs, dataAttrs, content) => {
-	const element = document.createElement(tagName);
+    const element = document.createElement(tagName);
 
-	if(classNames)
-		element.classList.add(...classNames);
+    if (classNames)
+        element.classList.add(...classNames);
 
-	if(attrs){
-		for(let attr in attrs){
-			element[attr] = attrs[attr];
-		}
-	}
+    if (attrs) {
+        for (let attr in attrs) {
+            element[attr] = attrs[attr];
+        }
+    }
 
-	if(dataAttrs){
-		for(let attr in dataAttrs){
+    if (dataAttrs) {
+        for (let attr in dataAttrs) {
             element.dataset[attr] = dataAttrs[attr];
-		}
-	}
-    
-	if(content)
-		element.innerHTML = content;
+        }
+    }
 
-	return element;
+    if (content)
+        element.innerHTML = content;
+
+    return element;
 }
 
 const getCookie = (cname) => {
-  let name = cname + "=";
-  let ca = document.cookie.split(';');
-  for(let i = 0; i < ca.length; i++)
-  {
-    let c = ca[i].trim();
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
 
-    if (c.indexOf(name) == 0) 
-        return c.substring(name.length,c.length);
-  }
+        if (c.indexOf(name) == 0)
+            return c.substring(name.length, c.length);
+    }
 
-  return null;
+    return null;
 }
 
 const showUserMessage = (title, info, status) => {
@@ -74,8 +73,33 @@ const showUserMessage = (title, info, status) => {
     });
 
     document.body.append(mes);
-    // setTimeout(() => mes.remove(), 3000);
+    setTimeout(() => mes.remove(), 3000);
 }
+
+const getRandomColor = () => {
+    let letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+const generatePhoto = (element) => {
+    return getElement('div', ['post-item'], {
+        id: "photo_" + element.id,
+        innerHTML: `
+        <div class='post-item__container'>
+            <div class='post-item__rating'>${element.rating}</div>
+            <div class='post-item__photo' style='background-image:url(${element.path})'
+        </div>`,
+        href: element.path,
+    }, {
+        'postId': element.id,
+        'hystmodal': '#post-detail'
+    });
+}
+
 
 const generateStar = (count) => {
     let curRating = "";
@@ -86,8 +110,6 @@ const generateStar = (count) => {
 
     return curRating;
 }
-
-let postStarBlock = null;
 
 const addPostRating = function(event, element, postID) {    
     console.log(event.target);
@@ -107,7 +129,7 @@ const showPostModal = function(modal) {
 
                 let classPostrating = getCookie('user-token') == post.user ? "post-rating__change-rating_blocked" : "";                
 
-                let userPhoto = user.photo ? `<img class='user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-photo_no-pict'>${user.firstname[0]}</div>`;
+                let userPhoto = user.photo ? `<img class='user-photo' src="${user.photo}" alt="фото пользователя">` : `<div class='user-photo_no-pict'>${user.lastname[0]}</div>`;
 
                 modalBody.innerHTML = `
                     <div class="post-modal__photo" style='background-image:url(${post.path})' data-id='${post.id}'></div>
@@ -138,47 +160,10 @@ const showPostModal = function(modal) {
 
                 postStarBlock = modalBody.querySelector('.post-rating__change-rating:not(.post-rating__change-rating_blocked)');
 
-                if(postStarBlock && getCookie('user-token') == post.user) {
+                if(getCookie('user-token') == post.user) {
                     postStarBlock.addEventListener('click', function(e) {
                         addPostRating(e, this, post.id);
                     })
                 }
             })
 }
-
-window.addEventListener('DOMContentLoaded', function(){
-    const postModal = new HystModal({
-        linkAttributeName: "data-hystmodal",
-        beforeOpen: showPostModal,
-        afterClose: function(modal){
-            modal.openedWindow.querySelector('.post-modal__body').innerHTML = `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
-        },
-    });
-
-    let postContainer = document.querySelector('.posts');
-
-    if(postContainer)
-    {
-        getData('/admin/api/photo')
-            .then((data) => {
-                for(let id in data.records){
-                    let element = data.records[id];
-
-                    let htmlel = getElement('div', ['post-item'], {
-                        id: "photo_" + element.id,
-                        innerHTML: `
-                        <div class='post-item__container'>
-                            <div class='post-item__rating'>${element.rating}</div>
-                            <div class='post-item__photo' style='background-image:url(${element.path})'
-                        </div>`,
-                        href: element.path,
-                    }, {
-                        'postId': element.id,
-                        'hystmodal': '#post-detail'
-                    })
-
-                    postContainer.append(htmlel);
-                }
-            })   
-    }
-})

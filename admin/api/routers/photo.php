@@ -5,10 +5,10 @@ function route($data) {
 
     // GET /photo
     if ($data['method'] === 'GET' && count($data['urlData']) === 1) {
-        echo json_encode(getPhotos($_SESSION['user_id']));
+        echo json_encode(getPhotos($_SESSION['user']['login']));
         exit;
     }
-    // GET /photo/5
+    // GET /photo/mary
     if ($data['method'] === 'GET' && count($data['urlData']) === 2) {
         echo json_encode(getPhotos($data['urlData'][1]));
         exit;
@@ -44,7 +44,7 @@ function route($data) {
 }
 
 // Возвращаем все фото
-function getPhotos($user_id) {
+function getPhotos($user_login) {
     try{
         $pdo = \Helpers\query\connectDB();
     } catch (PDOException $e) {
@@ -52,10 +52,26 @@ function getPhotos($user_id) {
         exit;
     }
 
+    if(!\Helpers\query\isExistsUserByLogin($pdo, $user_login)) {
+        \Helpers\query\throwHttpError('user not exists: ', 'пользователь с таким id не существует');
+        exit;
+    }
+
+    try {
+        $query = 'SELECT user_id FROM "user" WHERE user_login=?';
+        $data = $pdo->prepare($query);
+        $data->execute([$user_login]);
+
+        $row = $data->fetch(PDO::FETCH_LAZY);
+    } catch (PDOException $e) {
+        \Helpers\query\throwHttpError('query error', $e->getMessage());
+        exit;
+    }
+
     try {
         $query = 'SELECT * FROM photo WHERE user_id=?';
         $data = $pdo->prepare($query);
-        $data->execute([$user_id]);
+        $data->execute([$row->user_id]);
     } catch (PDOException $e) {
         \Helpers\query\throwHttpError('query error', $e->getMessage());
         exit;
@@ -77,6 +93,11 @@ function getPhotos($user_id) {
             'id' => $row->photo_id,
             'date' => $row->photo_date
         ];
+    }
+
+    if(count($result['records']) == 0){
+        \Helpers\query\throwHttpError('query error', 'пользователь не загрузил фото');
+        exit;
     }
 
     try {
@@ -161,7 +182,7 @@ function updatePhoto($id, $title) {
 
     // Если бренд не существует, то выбрасываем ошибку
     if (!\Helpers\isExistsPhotoById($pdo, $id)) {
-        \Helpers\throwHttpError('brand_not_exists', 'brand not exists');
+        \Helpers\throwHttpError('photo_not_exists', 'brand not exists');
         exit;
     }
 
