@@ -11,7 +11,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
             <label>Имя</label>
             <input type="text"
                 name="firstname"
-                pattern="[a-zA-ZА-яа-я]+"
+                pattern="[А-яа-я]+"
                 required
                 value='<?=$_REQUEST['firstname']?>' />
         </div>
@@ -20,7 +20,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
             <label>Фамилия</label>
             <input type="text"
                 name="lastname"
-                pattern="[a-zA-ZА-яа-я]+"
+                pattern="[А-яа-я]+"
                 required
                 value='<?=$_REQUEST['lastname']?>' />
         </div>

@@ -1,7 +1,7 @@
 'use strict'
 
 window.addEventListener('DOMContentLoaded', function() {
-    let form = document.querySelector('.auth-form'),
+    let form = document.querySelector('.edit-profile'),
         errorBlock = form.querySelector('.error-block');
     
     form.addEventListener('submit', function(e){
@@ -9,11 +9,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
         const fData = new FormData(this);
 
-        postData('/admin/api/user/auth', fData, {})
+        postData('/admin/api/user/', fData, {})
             .then((data) => {
-                showUserMessage('Успех', `Пользовтаель авторизован`, 'success');
-                form.reset();
-                window.location.href = '/';
+                showUserMessage('Успех', `Изменения сохранены, обновите страницу`, 'success');
             })
             .catch(error => {
                 let errorMess = getCookieError();

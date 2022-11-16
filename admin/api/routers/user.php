@@ -17,6 +17,12 @@ function route($data) {
         exit;
     }
 
+    // POST /user
+    if ($data['method'] === 'POST' && count($data['urlData']) === 1) {      
+        echo json_encode(updateUser($data['formData']));
+        exit;
+    }
+
     // POST /user/reg
     if ($data['method'] === 'POST' && count($data['urlData']) === 2 && $data['urlData'][1] == 'reg') {      
         echo json_encode(addUser($data['formData']));
@@ -223,4 +229,70 @@ function authUser($fData) {
     setcookie('user-token', md5($_SESSION['user_id']), time()+60*60*24*30, '/');
 
     return ['login' => $_SESSION['login']];
+}
+
+function updateUser($fData) {
+    try{
+        $pdo = \Helpers\query\connectDB();
+    } catch (PDOException $e) {
+        \Helpers\query\throwHttpError('database error connect', $e->getMessage());
+        exit;
+    }
+
+    if(!\Helpers\query\isExistsUserByLogin($pdo, $_SESSION['user']['login'])) {
+        \Helpers\query\throwHttpError('user not exists: ', 'пользователь не найден');
+        exit;
+    }
+
+    try {
+        if(!$_FILES['edit-profile-avatar']['error']) {
+            $avatar = \Helpers\files\loadfile('edit-profile-avatar')[0];
+
+            if($_SESSION['user']['photo']) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . $_SESSION['user']['photo']);
+            }
+        }
+
+        if(!$_FILES['edit-profile-bg']['error']) {
+            $bgimage = \Helpers\files\loadfile('edit-profile-bg')[0];
+
+            if($_SESSION['user']['bgimage']) {
+                unlink($_SERVER['DOCUMENT_ROOT'] . $_SESSION['user']['bgimage']);
+            }
+        }
+
+        $query = 'UPDATE "user" 
+        SET user_firstname = :firstname, 
+            user_lastname = :lastname, 
+            user_photo = :photo, 
+            user_bgimage = :bgimage
+        WHERE user_id = :user_id';
+
+        $newData = [
+            'firstname' => $fData['firstname'] ?: $_SESSION['user']['firstname'],
+            'lastname' => $fData['lastname'] ?: $_SESSION['user']['lastname'],
+            'photo' => $avatar ?: $_SESSION['user']['photo'],
+            'bgimage' => $bgimage ?: $_SESSION['user']['bgimage'],
+            'user_id' => $_SESSION['user_id']
+        ];
+        
+        $data = $pdo->prepare($query);
+        $data->execute($newData);
+    } catch(PDOException $e) {
+        \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 query error');
+        exit;
+    }
+
+    $fieldsUpdate = ['firstname', 'lastname', 'photo', 'bgimage'];
+
+    foreach($_SESSION['user'] as $code => $val) {
+        if(in_array($code, $fieldsUpdate)) {
+            $_SESSION['user'][$code] = $newData[$code];
+        }
+    }
+
+    return [
+        'login' => $_SESSION['user']['login']
+    ];
+
 }
