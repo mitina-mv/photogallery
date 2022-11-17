@@ -1,3 +1,122 @@
+:root {
+    /* bg */
+    --main-bg: #F2F2F2;
+
+    /* text */
+    --tx-main: #333333;
+    --tx-second: #4F4F4F;
+    --tx-subtitle: #828282;
+    --tx-star: #FFD600;
+    --tx-main-gr: linear-gradient(91.15deg, #1E86FF 5.14%, #ED17BE 45.35%, #FFD600 83.61%);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 25% auto;
+    background-color: var(--main-bg);
+    max-height: 100vh;
+    overflow: hidden;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+header {
+    max-height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.logo-block {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-caption {
+    color: var(--tx-main);
+}
+
+/* avatar */
+.avatar {
+    height: 40%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.avatar__photo {
+    width: 105px;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 50%;
+    object-position: center;
+    position: absolute;
+    bottom: -52.5px;
+    /* left: 20px; */
+    /* margin-bottom: 52.5px; */
+}
+.avatar__bgimage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 40%;
+    background-size: cover;
+    background-position: center;
+    z-index: -999;
+}
+
+/* avatar nums */
+.avatar__nums {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 40px;
+    align-items: flex-end;
+    align-content: flex-end;
+    position: absolute;
+    flex-direction: row;
+    bottom: 10px;
+    gap: 25px;
+    right: 0;
+    color: #fff;
+}
+.avatar-nums__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.avatar-nums__num {
+    font-size: 1.25em;
+}
+/* main-menu */
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0px 0 0 20px;
+}
+
+
+main {
+    background: #fff;
+    padding: 20px 40px 40px;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    overflow: hidden;
+    overflow-y: auto;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* old */
 .posts {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

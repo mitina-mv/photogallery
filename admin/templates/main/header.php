@@ -43,8 +43,10 @@ foreach($config['menu'] as $menu){
             <span class="avatar__subname"><?=$_SESSION['user']['login']?></span>
         </div>
         
-
+        
     </div>
+
+    <div class="avatar__bgimage" style='background-image: url(<?=$_SESSION['user']['bgimage'] ?: '/admin/assets/image/default-bg.png'?>);'></div>
 
     <nav class='main-menu'>
         <?php 
@@ -57,5 +59,8 @@ foreach($config['menu'] as $menu){
 
     <a href="?logout=true">Выход</a>
 </header>
-
+<main>
+    <div class="logo-block">
+        <img src="/admin/assets/image/logo.svg" alt="logo">
+    </div>
 <?php }?>
