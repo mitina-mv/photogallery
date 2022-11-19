@@ -9,6 +9,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 
 
 <form action="" method="POST" enctype="multipart/form-data" class='edit-profile' name='edit-profile'>
+    <div class="error-block"></div>
+    
     <label for="edit-profile-avatar">Аватар</label>
     <input type="file" name="edit-profile-avatar" id="edit-profile-avatar" accept="image/*">
 

@@ -1,3 +1,5 @@
+@import url('assets/fonts/fonts_include.css');
+
 :root {
     /* bg */
     --main-bg: #F2F2F2;
@@ -18,10 +20,25 @@ body {
     background-color: var(--main-bg);
     max-height: 100vh;
     overflow: hidden;
+    font-family: 'Nunito Sans';
 }
 
 body * {
     box-sizing: border-box;
+}
+
+/* buttons */
+.btn {
+    display: block;
+    width: fit-content;
+    text-decoration: none;
+}
+.btn.btn-second {
+    color: var(--tx-second);
+    border-radius: 50px;
+    font-size: 16px;
+    padding: 6px 16px;
+    border: 1px solid var(--tx-second);
 }
 
 header {
@@ -33,16 +50,8 @@ header {
     justify-content: space-between;
     padding: 20px;
 }
-
-.logo-block {
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.main-caption {
-    color: var(--tx-main);
+.header__logout {
+    align-self: center;
 }
 
 /* avatar */
@@ -73,6 +82,25 @@ header {
     background-position: center;
     z-index: -999;
 }
+.avatar__name {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: -50px;
+    left: 135px;
+    gap: 4px;
+}
+
+.avatar__main-name {
+    font-size: 1.2em;
+    color: var(--tx-main);
+    font-weight: 600;
+}
+
+.avatar__subname {
+    color: var(--tx-second);
+    font-size: .9em;
+}
 
 /* avatar nums */
 .avatar__nums {
@@ -85,7 +113,7 @@ header {
     flex-direction: row;
     bottom: 10px;
     gap: 25px;
-    right: 0;
+    left: 135px;
     color: #fff;
 }
 .avatar-nums__item {
@@ -103,6 +131,20 @@ header {
     gap: 8px;
     padding: 0px 0 0 20px;
 }
+.main-menu__item {
+    color: var(--tx-second);
+    text-decoration: none;
+}
+.main-menu__item:before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--tx-main-gr);
+    bottom: calc(50% - 4px);
+    left: -16px;
+    border-radius: 50%;
+}
 
 
 main {
@@ -114,6 +156,17 @@ main {
     overflow-y: auto;
     height: 100vh;
     box-sizing: border-box;
+}
+
+
+.logo-block {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.main-caption {
+    color: var(--tx-main);
 }
 
 /* old */

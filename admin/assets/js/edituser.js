@@ -15,7 +15,8 @@ window.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 let errorMess = getCookieError();
-                errorBlock.innerHTML = errorMess ? errorMess : 'Не удалось авторизоваться.' ;
+                errorBlock.innerHTML = errorMess ? errorMess : 'Не удалось обновить данные' ;
+                showUserMessage('Ошибка', errorMess ? errorMess : 'Не удалось обновить данные', 'error');
             })
     })
 })

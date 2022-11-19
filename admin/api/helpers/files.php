@@ -86,7 +86,7 @@ function loadfile($field){
             
             // Выводим сообщение о результате загрузки.
             if (!empty($error)) {
-                throw new Exception('file load error:' . $error);
+                throw new \Exception($error);
             }
         }
 

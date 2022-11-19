@@ -12,8 +12,9 @@ foreach($config['menu'] as $menu){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заголовок страницы</title>
+
     <link rel="stylesheet" href="/admin/templates/main/style.css">
-    <script src="/admin/templates/main/script.js"></script>
+    <script src="/admin/assets/js/script.js"></script>
 
     <script src="/admin/assets/hystmodal/hystmodal.min.js"></script>
     <link rel="stylesheet" href="/admin/assets/hystmodal/hystmodal.min.css">
@@ -39,7 +40,7 @@ foreach($config['menu'] as $menu){
         <img class="avatar__photo" src="<?=$_SESSION['user']['photo']?>" alt="аватар">
         
         <div class="avatar__name">
-            <span class="avatar__main-name"><?=$_SESSION['user']['lastname'] . $_SESSION['user']['firstname']?></span>
+            <span class="avatar__main-name"><?=$_SESSION['user']['lastname'] . " " . $_SESSION['user']['firstname']?></span>
             <span class="avatar__subname"><?=$_SESSION['user']['login']?></span>
         </div>
         
@@ -57,7 +58,7 @@ foreach($config['menu'] as $menu){
         <?php endforeach;?>
     </nav>
 
-    <a href="?logout=true">Выход</a>
+    <a class='btn btn-second header__logout' href="?logout=true">Выход</a>
 </header>
 <main>
     <div class="logo-block">

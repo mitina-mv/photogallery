@@ -17,4 +17,4 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
     <button type="submit" name="save-btn" value="save">Сохранить</button>
 </form>
 
-<script src="<?='/admin/templates/' . $config['template-name'] . '/assets/js/addpost.js'?>"></script>
+<script src="<?='/admin/assets/js/addpost.js'?>"></script>
