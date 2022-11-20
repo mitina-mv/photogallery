@@ -167,6 +167,8 @@ function addPhoto($fdata) {
         exit;
     }
 
+    ++$_SESSION['user']['post_count'];
+
     // Новый айдишник для добавленного поста
     $newId = (int)$pdo->lastInsertId();
 
@@ -206,6 +208,8 @@ function deletePhoto($id) {
         \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 error post delete');
         exit;
     }
+
+    --$_SESSION['user']['post_count'];
 
     return array(
         'id' => $id

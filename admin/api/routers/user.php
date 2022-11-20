@@ -296,8 +296,8 @@ function updateUser($fData) {
         WHERE user_id = :user_id';
 
         $newData = [
-            'firstname' => $fData['firstname'] ?: $_SESSION['user']['firstname'],
-            'lastname' => $fData['lastname'] ?: $_SESSION['user']['lastname'],
+            'firstname' => $fData['edit-profile-firstname'] ?: $_SESSION['user']['firstname'],
+            'lastname' => $fData['edit-profile-lastname'] ?: $_SESSION['user']['lastname'],
             'photo' => $avatar ?: $_SESSION['user']['photo'],
             'bgimage' => $bgimage ?: $_SESSION['user']['bgimage'],
             'user_id' => $_SESSION['user_id']

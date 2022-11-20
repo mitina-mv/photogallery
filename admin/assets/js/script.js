@@ -238,3 +238,25 @@ const deletePost = (modalStart, postID) => {
             showUserMessage('Ошибка', errorMessage, 'error');
         })
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+    let fileInput = document.querySelectorAll('.input__load-file');
+
+    fileInput.forEach(item => {
+        item.addEventListener('change', function(e) {
+            if (this.files[0]) {
+                let fr = new FileReader();
+
+                let name = this.name,
+                    fileLoadBlock = document.querySelector(`label.input__load-file-block[for=${name}]`);
+            
+                fr.addEventListener("load", function () {
+                    fileLoadBlock.style.backgroundImage = "url(" + fr.result + ")";
+                    fileLoadBlock.querySelector('span').style.color = 'transparent';
+                }, false);
+            
+                fr.readAsDataURL(this.files[0]);
+            }
+        })
+    })
+})
