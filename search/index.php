@@ -9,7 +9,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 
 <form action="" method="post" class='search-form'>
     <input type="text" name="search-text" id="search-text">
-    <button type="submit">Поиск</button>
+    <button class='search-form__btn' type="submit"><span class="ph-search"></span></button>
 </form>
 
 <div class="search-result"></div>

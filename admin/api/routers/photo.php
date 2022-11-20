@@ -153,20 +153,23 @@ function addPhoto($fdata) {
                     VALUES (:description, :path, :user_id)';
                     
         $data = $pdo->prepare($query);
+
         $data->execute([
             'description' => $fdata['desc'],
             'path' => $file,
             'user_id' => $_SESSION['user_id']
         ]);
     } catch (PDOException $e) {
-        \Helpers\query\throwHttpError('query error', $e->getMessage());
+        \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 error post add');
         exit;
-    } catch (Exception $e) {
-        \Helpers\query\throwHttpError('file load error', $e->getMessage());
+    } catch (\Exception $e) {
+        \Helpers\query\throwHttpError('file load error', $e->getMessage(), '400 file load error');
         exit;
     }
 
-    // Новый айдишник для добавленного бренда
+    ++$_SESSION['user']['post_count'];
+
+    // Новый айдишник для добавленного поста
     $newId = (int)$pdo->lastInsertId();
 
     return array(
@@ -176,45 +179,37 @@ function addPhoto($fdata) {
 }
 
 
-// Обновление фото
-function updatePhoto($id, $title) {
-    $pdo = \Helpers\connectDB();
-
-    // Если бренд не существует, то выбрасываем ошибку
-    if (!\Helpers\isExistsPhotoById($pdo, $id)) {
-        \Helpers\throwHttpError('photo_not_exists', 'brand not exists');
-        exit;
-    }
-
-    // Обновляем бренд в базе
-    $query = 'update brands set brand=:title where id=:id';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':id', $id, PDO::PARAM_INT);
-    $data->bindParam(':title', $title);
-    $data->execute();
-
-    return array(
-        'id' => $id,
-        'title' => $title
-    );
-}
-
-
 // Удаление фото
 function deletePhoto($id) {
-    $pdo = \Helpers\connectDB();
-
-    // Если бренд не существует, то выбрасываем ошибку
-    if (!\Helpers\isExistsPhotoById($pdo, $id)) {
-        \Helpers\throwHttpError('brand_not_exists', 'brand not exists');
+    try{
+        $pdo = \Helpers\query\connectDB();
+    } catch (PDOException $e) {
+        \Helpers\query\throwHttpError('database error connect', $e->getMessage());
         exit;
     }
 
-    // Удаляем бренд из базы
-    $query = 'delete from brands where id=:id';
-    $data = $pdo->prepare($query);
-    $data->bindParam(':id', $id, PDO::PARAM_INT);
-    $data->execute();
+    // Если бренд не существует, то выбрасываем ошибку
+    if (!\Helpers\query\isExistsPostById($pdo, $id)) {
+        \Helpers\query\throwHttpError('photo not exists', 'Фото не существует. Возможно, вы удалили его ранее.', '404 photo not exists');
+        exit;
+    }
+
+    // Удаляем фото из базы
+    try {
+        $query = 'DELETE FROM photo WHERE photo_id=:id AND user_id=:user_id';
+
+        $data = $pdo->prepare($query);        
+        $data->execute([
+            'id' => $id,
+            'user_id' => $_SESSION['user_id']
+        ]);
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+        \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 error post delete');
+        exit;
+    }
+
+    --$_SESSION['user']['post_count'];
 
     return array(
         'id' => $id

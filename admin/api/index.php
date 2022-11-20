@@ -20,6 +20,9 @@ if (\Helpers\query\isValidRouter($router)) {
     // Запускаем главную функцию
     route($data);
 
+    // TODO удалить, когда заработют нормальные ответы
+    setcookie('query_error', '', 0, "/");
+
 } else {
     // Выбрасываем ошибку
     \Helpers\query\throwHttpError('invalid_router', 'router not found');

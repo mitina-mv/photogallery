@@ -14,7 +14,8 @@ window.addEventListener('DOMContentLoaded', () => {
                 form.reset();
             })
             .catch(() => {
-                showUserMessage('Ошибка', `Что-то пошло не так`, 'error');
+                let errorMess = getCookieError();
+                showUserMessage('Ошибка', errorMess ? errorMess : `Что-то пошло не так`, 'error');
             })
     })
 })

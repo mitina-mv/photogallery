@@ -99,7 +99,8 @@ function getUserDetail($login){
         'firstname' => $row->user_firstname,
         'lastname' => $row->user_lastname,
         'login' => $row->user_login,
-        'photo' => $row->user_photo ?: null
+        'photo' => $row->user_photo ?: null,
+        'bgimage' => $row->user_bgimage ?: null
     ];
 
     return $result;
@@ -224,9 +225,35 @@ function authUser($fData) {
 
     while($row = $data->fetch(PDO::FETCH_LAZY)) {
         $_SESSION['user']['post_count'] += 1;
+        $photoids[] = $row->photo_id;
     }
 
     setcookie('user-token', md5($_SESSION['user_id']), time()+60*60*24*30, '/');
+
+    // запрос оценок пользователя
+    if($photoids && $_SESSION['user']['post_count'] > 0) {
+        try {
+            $in = str_repeat('?,', count($photoids) - 1) . '?';
+
+            $query = "SELECT rating_value FROM rating WHERE photo_id IN ($in)";
+            
+            $data = $pdo->prepare($query);
+            $data->execute($photoids);
+        } catch(PDOException $e) {
+            \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 query error');
+            exit;
+        }
+    
+        $ratingCount = 0;
+
+        while($row = $data->fetch(PDO::FETCH_LAZY)) {
+            $_SESSION['user']['rating'] +=  $row->rating_value;
+            ++$ratingCount;
+        }
+
+        $_SESSION['user']['rating'] = round($_SESSION['user']['rating'] / $ratingCount, 1);
+    }
+
 
     return ['login' => $_SESSION['login']];
 }
@@ -245,7 +272,7 @@ function updateUser($fData) {
     }
 
     try {
-        if(!$_FILES['edit-profile-avatar']['error']) {
+        if($_FILES['edit-profile-avatar']['error'] == 0) {
             $avatar = \Helpers\files\loadfile('edit-profile-avatar')[0];
 
             if($_SESSION['user']['photo']) {
@@ -253,7 +280,7 @@ function updateUser($fData) {
             }
         }
 
-        if(!$_FILES['edit-profile-bg']['error']) {
+        if($_FILES['edit-profile-bg']['error'] == 0) {
             $bgimage = \Helpers\files\loadfile('edit-profile-bg')[0];
 
             if($_SESSION['user']['bgimage']) {
@@ -269,8 +296,8 @@ function updateUser($fData) {
         WHERE user_id = :user_id';
 
         $newData = [
-            'firstname' => $fData['firstname'] ?: $_SESSION['user']['firstname'],
-            'lastname' => $fData['lastname'] ?: $_SESSION['user']['lastname'],
+            'firstname' => $fData['edit-profile-firstname'] ?: $_SESSION['user']['firstname'],
+            'lastname' => $fData['edit-profile-lastname'] ?: $_SESSION['user']['lastname'],
             'photo' => $avatar ?: $_SESSION['user']['photo'],
             'bgimage' => $bgimage ?: $_SESSION['user']['bgimage'],
             'user_id' => $_SESSION['user_id']
@@ -280,6 +307,9 @@ function updateUser($fData) {
         $data->execute($newData);
     } catch(PDOException $e) {
         \Helpers\query\throwHttpError('query error', $e->getMessage(), '400 query error');
+        exit;
+    } catch(\Exception $e) {
+        \Helpers\query\throwHttpError('error file load', $e->getMessage(), '400 error file');
         exit;
     }
 
