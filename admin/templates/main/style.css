@@ -639,6 +639,7 @@ textarea#add-post-desc {
     font-weight: 900;
     font-size: 1.25em;
     position: absolute;
+    object-fit: cover;
     top: -32%;
     left: 50%;
     margin-left: -23px;
