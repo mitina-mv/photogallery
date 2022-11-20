@@ -17,21 +17,3 @@ $config = [
         'top' => 'main'
     ]
 ];
-
-$host = '127.0.0.1';
-$port = '5432';
-$user = 'postgres';
-$password = 'admin';
-$dbname = 'photogallery';
-	
-try {
-    $db = new PDO("pgsql:host={$host};port={$port};user={$user};password={$password};dbname={$dbname}");
-
-    $db->setAttribute(
-        PDO::ATTR_ERRMODE, 
-        PDO::ERRMODE_EXCEPTION
-    );
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-    die();
-}

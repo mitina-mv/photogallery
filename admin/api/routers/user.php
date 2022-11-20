@@ -251,7 +251,8 @@ function authUser($fData) {
             ++$ratingCount;
         }
 
-        $_SESSION['user']['rating'] = round($_SESSION['user']['rating'] / $ratingCount, 1);
+        if($ratingCount)
+            $_SESSION['user']['rating'] = round($_SESSION['user']['rating'] / $ratingCount, 1);
     }
 
 
