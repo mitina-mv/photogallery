@@ -1,5 +1,6 @@
 # photogallery
 #твоиМоменты - сайт для загрузки фото и выставления оценок другим пользователям.
+![alt text](https://github.com/mitina-mv/photogallery/blob/mitina-mv-readme/photogallery.loc_%20(1).png)
 
 Реализован на HTML|CSS|JS|PHP + PostgreSQL
 
