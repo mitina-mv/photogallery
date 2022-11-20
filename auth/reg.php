@@ -5,6 +5,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 
 <?if(!$_SESSION['user_id']):?>
     <form method="post" action="" name="reg-form" class='reg-form'>
+        <img src="/admin/assets/image/logo.svg" alt="log">
+
         <div class="error-block"></div>
 
         <div class="form-element">
@@ -57,6 +59,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/admin/templates/' . $config['template
 
         <button type="submit"
             name="reg-btn"
+            class='btn btn-primary'
             value="registration">Зарегистироваться</button>
 
         <div class="form-links">

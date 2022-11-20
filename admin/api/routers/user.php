@@ -99,7 +99,8 @@ function getUserDetail($login){
         'firstname' => $row->user_firstname,
         'lastname' => $row->user_lastname,
         'login' => $row->user_login,
-        'photo' => $row->user_photo ?: null
+        'photo' => $row->user_photo ?: null,
+        'bgimage' => $row->user_bgimage ?: null
     ];
 
     return $result;

@@ -52,7 +52,7 @@ foreach($config['menu'] as $menu){
     <nav class='main-menu'>
         <?php 
             foreach($arSiteMenu[$config['menu']['top']] as $item):?>
-                <a class='main-menu__item' href="<?=$item['link']?>">
+                <a class='main-menu__item <?if($item['link'] == $_SERVER['REQUEST_URI']) echo 'selected'?>' href="<?=$item['link']?>">
                     <?=$item['title']?>
                 </a>
         <?php endforeach;?>
@@ -61,7 +61,13 @@ foreach($config['menu'] as $menu){
     <a class='btn btn-second header__logout' href="?logout=true">Выход</a>
 </header>
 <main>
-    <div class="logo-block">
-        <img src="/admin/assets/image/logo.svg" alt="logo">
-    </div>
+    <?if(strpos($_SERVER['REQUEST_URI'], '/profile/') !== false):?>
+        <div class="profile-logo" style='background-image: url(/admin/assets/image/default-bg-max.png);'>
+            <img src="/admin/assets/image/logo-white.svg" alt="logo">
+        </div>
+    <?else:?>        
+        <div class="logo-block">
+            <img src="/admin/assets/image/logo.svg" alt="logo">
+        </div>
+    <?endif;?>
 <?php }?>
